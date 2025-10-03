@@ -2,9 +2,10 @@
   "name": "server",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+  "type": "module",
+ "scripts": {
+  "start": "node src/server.js",
+  "dev": "nodemon src/server.js"
   },
   "author": "",
   "license": "ISC",
