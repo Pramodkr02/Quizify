@@ -29,6 +29,8 @@ export async function registerUserController(req, res) {
       });
     }
 
+    const verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
+
     const salt = await bcryptjs.genSalt(10);
     const hashPassword = await bcryptjs.hash(password, salt);
 
@@ -147,6 +149,31 @@ export async function logoutController(req, res) {
       message: error.message || error,
       error: true,
       success: false,
+    });
+  }
+}
+
+//get user detail
+export async function getuserController(req, res) {
+  try {
+    const userId = req.userId;
+    console.log(userId);
+
+    const user = await UserModel.findById(userId).select(
+      "-password -refresh_token"
+    );
+
+    return res.json({
+      message: "user details",
+      success: false,
+      error: true,
+      data: user,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || error,
+      success: false,
+      error: true,
     });
   }
 }

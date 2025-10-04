@@ -19,3 +19,21 @@
 .shaodow-lg {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
+
+.btn-org {
+  background-color: #ff5252 !important;
+  color: white !important;
+  font: 500;
+  font-size: 16px;
+  border-radius: 5px !important;
+  padding: 7px 20px !important;
+}
+
+.btn-org:hover {
+  background-color: #0a0909e5 !important;
+}
+
+.btn-lg {
+  font-size: 18px;
+  padding: 10px 16px !important;
+}
