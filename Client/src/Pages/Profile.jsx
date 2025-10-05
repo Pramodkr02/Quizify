@@ -34,6 +34,63 @@ const Profile = () => {
   const context = useContext(MyContext);
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [performanceData, setPerformanceData] = useState(null);
+
+  useEffect(() => {
+    if (!context.isLogin) {
+      navigate("/login");
+      return;
+    }
+
+    const loadPerformanceData = async () => {
+      setLoading(true);
+      try {
+        const res = await fetchDashboard();
+        if (res?.success) {
+          const latest = res.data?.latestQuiz;
+          const latestComparisonRaw = sessionStorage.getItem(
+            "latest_quiz_comparison"
+          );
+          const latestComparison = latestComparisonRaw
+            ? JSON.parse(latestComparisonRaw)
+            : null;
+
+          setPerformanceData({
+            totalMarks: latest?.totalMarks || 0,
+            userMarks: latest?.userMarks || 0,
+            attemptedQuestions: latest?.attemptedQuestions || 0,
+            notVisited: latest?.notVisited || 0,
+            markedForReview: latest?.markedForReview || 0,
+            timeSpent: latest?.timeSpent || 0,
+            percentage: latest?.accuracy || 0,
+            recentQuiz: {
+              date: latest?.createdAt,
+              score: latest?.userMarks || 0,
+              total: latest?.totalMarks || 0,
+              timeSpent: latest?.timeSpent || 0,
+              answers: latestComparison?.answers || [],
+            },
+            pastPerformances: (res.data?.recentReports || []).map((r) => ({
+              date: r.createdAt,
+              score: r.userMarks,
+              total: r.totalMarks,
+              percentage: r.accuracy,
+              timeSpent: r.timeSpent,
+            })),
+          });
+        } else {
+          setPerformanceData(null);
+        }
+      } catch (e) {
+        console.error(e);
+        setPerformanceData(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPerformanceData();
+  }, [context.isLogin, navigate]);
 
   useEffect(() => {
     if (!context.isLogin) {
@@ -220,7 +277,7 @@ const Profile = () => {
             </Card>
 
             {/* Quick Stats */}
-            <Card>
+            <Card className="mb-6">
               <CardContent>
                 <Typography
                   variant="h6"
@@ -260,6 +317,65 @@ const Profile = () => {
                 </div>
               </CardContent>
             </Card>
+
+            <Grid item xs={12} lg={4} sx={{ order: { xs: 3, lg: 2 } }}>
+              <Card className="h-full flex flex-col">
+                <CardContent className="flex flex-col h-full">
+                  <Typography
+                    variant="h6"
+                    className="font-bold text-gray-800 mb-4"
+                  >
+                    Past Performances
+                  </Typography>
+
+                  <div className="space-y-3 max-h-[520px] overflow-auto">
+                    {performanceData.pastPerformances?.map(
+                      (performance, index) => (
+                        <div key={index} className="bg-gray-50 rounded-lg p-4">
+                          <div className="flex justify-between items-center mb-2">
+                            <Typography
+                              variant="body2"
+                              className="text-gray-600"
+                            >
+                              {new Date(performance.date).toLocaleDateString()}
+                            </Typography>
+                            <Chip
+                              label={`${performance.percentage}%`}
+                              color={
+                                performance.percentage >= 70
+                                  ? "success"
+                                  : "default"
+                              }
+                              size="small"
+                            />
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span>
+                              Score: {performance.score}/{performance.total}
+                            </span>
+                            <span className="text-gray-500">
+                              {performance.percentage >= 70
+                                ? "Good"
+                                : "Needs Improvement"}
+                            </span>
+                          </div>
+                          <LinearProgress
+                            variant="determinate"
+                            value={performance.percentage}
+                            className="mt-2"
+                            color={
+                              performance.percentage >= 70
+                                ? "success"
+                                : "primary"
+                            }
+                          />
+                        </div>
+                      )
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
 
           <Grid item xs={12} lg={8}>
@@ -407,51 +523,63 @@ const Profile = () => {
                   Performance History
                 </Typography>
 
-                <div className="flex md:block overflow-x-auto gap-3 md:space-y-3 pr-1">
-                  {userProfile.recentScores.map((score, index) => (
+                {(() => {
+                  const isScrollable =
+                    (userProfile.recentScores || []).length > 6;
+                  return (
                     <div
-                      key={index}
-                      className="bg-gray-50 rounded-lg p-4 flex-shrink-0 min-w-[260px] md:min-w-0"
+                      className={`${
+                        isScrollable
+                          ? "max-h-[360px] overflow-auto scroll-smooth pr-1"
+                          : "pr-1"
+                      } md:space-y-3 space-y-3`}
                     >
-                      <div className="flex justify-between items-center mb-2">
-                        <Typography variant="body2" className="text-gray-600">
-                          {formatDate(score.date)}
-                        </Typography>
-                        <Chip
-                          label={`${score.percentage}%`}
-                          color={
-                            score.percentage >= 80
-                              ? "success"
-                              : score.percentage >= 60
-                              ? "warning"
-                              : "error"
-                          }
-                          size="small"
-                        />
-                      </div>
-                      <div className="flex justify-between text-sm mb-2">
-                        <span>
-                          Score: {score.score}/{score.total}
-                        </span>
-                        <span className="text-gray-500">
-                          Time: {formatTime(score.timeSpent)}
-                        </span>
-                      </div>
-                      <LinearProgress
-                        variant="determinate"
-                        value={score.percentage}
-                        className="mt-2"
-                        color={
-                          score.percentage >= 80
-                            ? "success"
-                            : score.percentage >= 60
-                            ? "warning"
-                            : "error"
-                        }
-                      />
+                      {userProfile.recentScores.map((score, index) => (
+                        <div key={index} className="bg-gray-50 rounded-lg p-4">
+                          <div className="flex justify-between items-center mb-2">
+                            <Typography
+                              variant="body2"
+                              className="text-gray-600"
+                            >
+                              {formatDate(score.date)}
+                            </Typography>
+                            <Chip
+                              label={`${score.percentage}%`}
+                              color={
+                                score.percentage >= 80
+                                  ? "success"
+                                  : score.percentage >= 60
+                                  ? "warning"
+                                  : "error"
+                              }
+                              size="small"
+                            />
+                          </div>
+                          <div className="flex justify-between text-sm mb-2">
+                            <span>
+                              Score: {score.score}/{score.total}
+                            </span>
+                            <span className="text-gray-500">
+                              Time: {formatTime(score.timeSpent)}
+                            </span>
+                          </div>
+                          <LinearProgress
+                            variant="determinate"
+                            value={score.percentage}
+                            className="mt-2"
+                            color={
+                              score.percentage >= 80
+                                ? "success"
+                                : score.percentage >= 60
+                                ? "warning"
+                                : "error"
+                            }
+                          />
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  );
+                })()}
               </CardContent>
             </Card>
           </Grid>

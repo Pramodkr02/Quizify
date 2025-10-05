@@ -180,7 +180,7 @@ const Dashboard = () => {
         </div>
 
         {/* Performance Overview Cards */}
-        <Grid container spacing={4} className="mb-8">
+        <Grid container spacing={4} className="mb-4">
           <Grid item xs={12} sm={6} md={3}>
             <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
               <CardContent>
@@ -254,10 +254,11 @@ const Dashboard = () => {
           </Grid>
         </Grid>
 
-        <Grid container spacing={4}>
-          {/* Detailed Performance */}
-          <Grid item xs={12} lg={8}>
-            <Card className="mb-6">
+        {/* Main Content Grid */}
+        <Grid container spacing={4} alignItems="stretch">
+          {/* Detailed Performance: left column */}
+          <Grid item xs={12} lg={4} sx={{ order: { xs: 1, lg: 1 } }}>
+            <Card className="mb-4 h-full">
               <CardContent>
                 <Typography
                   variant="h6"
@@ -322,10 +323,12 @@ const Dashboard = () => {
                 </div>
               </CardContent>
             </Card>
+          </Grid>
 
-            {/* Question-Answer Comparison */}
-            <Card>
-              <CardContent>
+          {/* QA Comparison: right column */}
+          <Grid item xs={12} lg={8} sx={{ order: { xs: 2, lg: 2 } }}>
+            <Card className="h-full flex flex-col">
+              <CardContent className="flex flex-col h-full">
                 <Typography
                   variant="h6"
                   className="font-bold text-gray-800 mb-4"
@@ -333,107 +336,103 @@ const Dashboard = () => {
                   Question-Answer Comparison (Latest Quiz)
                 </Typography>
 
+                {/* Latest quiz summary */}
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                  <Chip
+                    label={`Date: ${new Date(
+                      performanceData.recentQuiz.date
+                    ).toLocaleDateString()}`}
+                    size="small"
+                  />
+                  <Chip
+                    label={`Score: ${performanceData.recentQuiz.score}/${performanceData.recentQuiz.total}`}
+                    color="primary"
+                    size="small"
+                  />
+                  <Chip
+                    label={`Accuracy: ${performanceData.percentage}%`}
+                    color={
+                      performanceData.percentage >= 70 ? "success" : "default"
+                    }
+                    size="small"
+                  />
+                  <Chip
+                    label={`Time: ${formatTime(
+                      performanceData.recentQuiz.timeSpent
+                    )}`}
+                    size="small"
+                  />
+                </div>
+
                 <TableContainer
                   component={Paper}
                   variant="outlined"
-                  className="overflow-x-auto"
+                  className="overflow-x-auto flex-1"
+                  sx={{ maxHeight: 520 }}
                 >
-                  <Table size="small" className="min-w-[640px]">
+                  <Table size="small" stickyHeader className="min-w-[720px]">
                     <TableHead>
                       <TableRow>
-                        <TableCell>Question</TableCell>
-                        <TableCell>Your Answer</TableCell>
-                        <TableCell>Correct Answer</TableCell>
-                        <TableCell>Status</TableCell>
+                        <TableCell className="w-1/2">Question</TableCell>
+                        <TableCell className="w-1/6">Your Answer</TableCell>
+                        <TableCell className="w-1/6">Correct Answer</TableCell>
+                        <TableCell className="w-1/6">Status</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {performanceData.recentQuiz.answers.map((item, index) => (
-                        <TableRow key={index}>
-                          <TableCell>
+                      {performanceData.recentQuiz.answers.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={4} align="center">
                             <Typography
                               variant="body2"
-                              className="max-w-xs truncate"
+                              className="text-gray-500"
                             >
-                              {item.question}
+                              No answers available for the latest quiz.
                             </Typography>
                           </TableCell>
-                          <TableCell>{item.userAnswer}</TableCell>
-                          <TableCell>{item.correctAnswer}</TableCell>
-                          <TableCell>
-                            <Chip
-                              icon={
-                                item.isCorrect ? (
-                                  <FaCheckCircle />
-                                ) : (
-                                  <FaTimesCircle />
-                                )
-                              }
-                              label={item.isCorrect ? "Correct" : "Incorrect"}
-                              color={item.isCorrect ? "success" : "error"}
-                              size="small"
-                            />
-                          </TableCell>
                         </TableRow>
-                      ))}
+                      ) : (
+                        performanceData.recentQuiz.answers.map(
+                          (item, index) => (
+                            <TableRow
+                              key={index}
+                              className={
+                                index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                              }
+                            >
+                              <TableCell>
+                                <Typography
+                                  variant="body2"
+                                  className="line-clamp-2"
+                                >
+                                  {item.question}
+                                </Typography>
+                              </TableCell>
+                              <TableCell>{item.userAnswer}</TableCell>
+                              <TableCell>{item.correctAnswer}</TableCell>
+                              <TableCell>
+                                <Chip
+                                  icon={
+                                    item.isCorrect ? (
+                                      <FaCheckCircle />
+                                    ) : (
+                                      <FaTimesCircle />
+                                    )
+                                  }
+                                  label={
+                                    item.isCorrect ? "Correct" : "Incorrect"
+                                  }
+                                  color={item.isCorrect ? "success" : "error"}
+                                  size="small"
+                                />
+                              </TableCell>
+                            </TableRow>
+                          )
+                        )
+                      )}
                     </TableBody>
                   </Table>
                 </TableContainer>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          {/* Past Performances */}
-          <Grid item xs={12} lg={4}>
-            <Card>
-              <CardContent>
-                <Typography
-                  variant="h6"
-                  className="font-bold text-gray-800 mb-4"
-                >
-                  Past Performances
-                </Typography>
-
-                <div className="space-y-3">
-                  {performanceData.pastPerformances?.map(
-                    (performance, index) => (
-                      <div key={index} className="bg-gray-50 rounded-lg p-4">
-                        <div className="flex justify-between items-center mb-2">
-                          <Typography variant="body2" className="text-gray-600">
-                            {new Date(performance.date).toLocaleDateString()}
-                          </Typography>
-                          <Chip
-                            label={`${performance.percentage}%`}
-                            color={
-                              performance.percentage >= 70
-                                ? "success"
-                                : "default"
-                            }
-                            size="small"
-                          />
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span>
-                            Score: {performance.score}/{performance.total}
-                          </span>
-                          <span className="text-gray-500">
-                            {performance.percentage >= 70
-                              ? "Good"
-                              : "Needs Improvement"}
-                          </span>
-                        </div>
-                        <LinearProgress
-                          variant="determinate"
-                          value={performance.percentage}
-                          className="mt-2"
-                          color={
-                            performance.percentage >= 70 ? "success" : "primary"
-                          }
-                        />
-                      </div>
-                    )
-                  )}
-                </div>
               </CardContent>
             </Card>
           </Grid>
