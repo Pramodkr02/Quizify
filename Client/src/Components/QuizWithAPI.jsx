@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import QuizPage from "../Pages/QuizPage";
-import { fetchQuizQuestions, QUIZ_CONFIGS } from "../Utils/api";
+import QuizStartModal from "./QuizStartModal";
+import CongratulationsModal from "./CongratulationsModal";
+import {
+  fetchQuizQuestions,
+  QUIZ_CONFIGS,
+  submitQuizSummary,
+} from "../Utils/api";
 
 const QuizWithAPI = ({ config = QUIZ_CONFIGS.MEDIUM_MIXED }) => {
+  const navigate = useNavigate();
   const [quizData, setQuizData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showStartModal, setShowStartModal] = useState(true);
+  const [showCongratsModal, setShowCongratsModal] = useState(false);
+  const [quizResults, setQuizResults] = useState(null);
 
   useEffect(() => {
     const loadQuiz = async () => {
@@ -27,8 +38,102 @@ const QuizWithAPI = ({ config = QUIZ_CONFIGS.MEDIUM_MIXED }) => {
 
   const handleQuizSubmit = async (submissionData) => {
     console.log("Quiz submitted with data:", submissionData);
-    // Here you would typically send the data to your backend
-    alert("Quiz submitted successfully! Check console for submission data.");
+
+    // Calculate score
+    let score = 0;
+    const questions = quizData.results;
+
+    Object.entries(submissionData.answers).forEach(([index, userAnswer]) => {
+      const questionIndex = parseInt(index);
+      const question = questions[questionIndex];
+      if (question && userAnswer === question.correct_answer) {
+        score++;
+      }
+    });
+
+    const totalMarks = questions.length;
+    const attemptedQuestions = submissionData.attemptedQuestions;
+    const timeSpent = submissionData.timeSpent;
+    const notVisited = Math.max(totalMarks - attemptedQuestions, 0);
+    const markedForReview = submissionData.markedForReview?.length || 0;
+
+    const summaryPayload = {
+      quizId:
+        submissionData.quizId ||
+        Math.random().toString(36).substr(2, 7).toUpperCase(),
+      totalMarks,
+      userMarks: score,
+      attemptedQuestions,
+      notVisited,
+      markedForReview,
+      timeSpent,
+    };
+
+    // Save latest question-answer comparison only in sessionStorage (temporary)
+    const qaComparison = questions.map((q, idx) => ({
+      question: q.question,
+      correctAnswer: q.correct_answer,
+      userAnswer: submissionData.answers[idx],
+      isCorrect: submissionData.answers[idx] === q.correct_answer,
+      category: q.category,
+      difficulty: q.difficulty,
+      type: q.type,
+    }));
+    try {
+      sessionStorage.setItem(
+        "latest_quiz_comparison",
+        JSON.stringify({
+          createdAt: Date.now(),
+          totalMarks,
+          score,
+          timeSpent,
+          attemptedQuestions,
+          notVisited,
+          markedForReview,
+          answers: qaComparison,
+        })
+      );
+    } catch (e) {
+      console.warn("Failed saving session comparison", e);
+    }
+
+    // Submit summary to backend
+    try {
+      const apiRes = await submitQuizSummary(summaryPayload);
+      if (!apiRes?.success) {
+        console.warn("Summary submit failed", apiRes);
+      }
+    } catch (e) {
+      console.error("Error submitting summary", e);
+    }
+
+    const results = {
+      score,
+      totalMarks,
+      attemptedQuestions,
+      timeSpent,
+    };
+
+    setQuizResults(results);
+    setShowCongratsModal(true);
+  };
+
+  const handleStartQuiz = () => {
+    setShowStartModal(false);
+  };
+
+  const handleCancelQuiz = () => {
+    navigate("/");
+  };
+
+  const handleViewDashboard = () => {
+    setShowCongratsModal(false);
+    navigate("/dashboard");
+  };
+
+  const handleCloseCongrats = () => {
+    setShowCongratsModal(false);
+    navigate("/");
   };
 
   if (loading) {
@@ -94,7 +199,27 @@ const QuizWithAPI = ({ config = QUIZ_CONFIGS.MEDIUM_MIXED }) => {
     );
   }
 
-  return <QuizPage quizData={quizData} onQuizSubmit={handleQuizSubmit} />;
+  return (
+    <>
+      <QuizStartModal
+        open={showStartModal}
+        onClose={handleCancelQuiz}
+        onConfirm={handleStartQuiz}
+      />
+
+      <CongratulationsModal
+        open={showCongratsModal}
+        onClose={handleCloseCongrats}
+        score={quizResults?.score || 0}
+        totalMarks={quizResults?.totalMarks || 0}
+        onViewDashboard={handleViewDashboard}
+      />
+
+      {!showStartModal && (
+        <QuizPage quizData={quizData} onQuizSubmit={handleQuizSubmit} />
+      )}
+    </>
+  );
 };
 
 export default QuizWithAPI;

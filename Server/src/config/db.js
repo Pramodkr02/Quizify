@@ -2,10 +2,10 @@ import mongoose from "mongoose";
 
 export const connectDB = async () => {
   try {
-    const mongoUri = process.env.MONGO_URI;
-    if (!mongoUri) {
-      throw new Error("MONGO_URI is not defined in environment variables");
-    }
+    const mongoUri =
+      process.env.MONGO_URI ||
+      process.env.MONGODB_URI ||
+      "mongodb://localhost:27017/quizify";
     await mongoose.connect(mongoUri);
     console.log("MongoDB Connected");
   } catch (error) {

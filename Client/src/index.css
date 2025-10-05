@@ -37,3 +37,30 @@
   font-size: 18px;
   padding: 10px 16px !important;
 }
+
+:root {
+  /* Ensure iOS safe areas are respected when needed */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Prevent accidental 100vw causing overflow with scrollbars */
+.container,
+.max-w-7xl,
+.mx-auto {
+  box-sizing: border-box;
+}
+
+/* Ensure images don't overflow */
+img {
+  max-width: 100%;
+  height: auto;
+}

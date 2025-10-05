@@ -8,7 +8,7 @@ export const postData = async (url, formData) => {
     const response = await fetch(apiUrl + url, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`, //Include your API key here
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`, //Include your API key here
         "Content-Type": "application/json", //Set the Content-type and application/json
       },
       body: JSON.stringify(formData),
@@ -28,14 +28,30 @@ export const postData = async (url, formData) => {
 export const fetchDataFromApi = async (url) => {
   try {
     const { data } = await axios.get(apiUrl + url, {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-      "Content-Type": "application/json",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        "Content-Type": "application/json",
+      },
     });
     return data;
   } catch (error) {
     console.log(error);
     return error;
   }
+};
+
+// Quizify backend helpers
+
+export const submitQuizSummary = async (summary) => {
+  return postData("/api/quiz/submit", summary);
+};
+
+export const fetchDashboard = async () => {
+  return fetchDataFromApi("/api/quiz/dashboard");
+};
+
+export const fetchPerformanceHistory = async (page = 1, limit = 10) => {
+  return fetchDataFromApi(`/api/quiz/performance?page=${page}&limit=${limit}`);
 };
 
 // Open Trivia Database API utility functions
@@ -403,9 +419,8 @@ export const FALLBACK_QUIZ_DATA = {
   ],
 };
 
-/**
- * Fetch quiz questions with fallback to sample data
- */
+//  Fetch quiz questions with fallback to sample data
+
 export const fetchQuizQuestionsWithFallback = async (options = {}) => {
   const { amount = 15 } = options;
 

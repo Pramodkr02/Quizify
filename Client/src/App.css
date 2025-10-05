@@ -5,6 +5,7 @@
 /* Optional: set default font globally */
 body {
   font-family: "Inter", sans-serif;
+  overflow-x: hidden;
 }
 h1,
 h2,

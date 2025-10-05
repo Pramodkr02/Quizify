@@ -15,7 +15,7 @@ const auth = (req, res, next) => {
     }
 
     // Verify token
-    const decoded = jwt.verify(token, process.env.SECRET_KEY_ACCESS_TOKEN);
+    const decoded = jwt.verify(token, process.env.JSON_WEB_TOKEN_SECRET_KEY);
 
     req.userId = decoded.id; // attach user id to request
     next(); // go to next middleware/controller
