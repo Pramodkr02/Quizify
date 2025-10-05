@@ -54,7 +54,7 @@ export async function registerUserController(req, res) {
     return res.status(200).json({
       success: true,
       error: false,
-      message: "User registered successfully! Please verify your email.",
+      message: "User registered successfully! Please login now",
       token: token,
     });
   } catch (error) {

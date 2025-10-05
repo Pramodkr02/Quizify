@@ -333,8 +333,12 @@ const Dashboard = () => {
                   Question-Answer Comparison (Latest Quiz)
                 </Typography>
 
-                <TableContainer component={Paper} variant="outlined">
-                  <Table>
+                <TableContainer
+                  component={Paper}
+                  variant="outlined"
+                  className="overflow-x-auto"
+                >
+                  <Table size="small" className="min-w-[640px]">
                     <TableHead>
                       <TableRow>
                         <TableCell>Question</TableCell>

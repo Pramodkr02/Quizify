@@ -81,6 +81,7 @@ const LoginPage = () => {
                 id="email"
                 label="Email *"
                 name="email"
+                size="small"
                 value={formFields.email}
                 disabled={isLoading === true ? true : false}
                 variant="outlined"
@@ -97,6 +98,7 @@ const LoginPage = () => {
                 variant="outlined"
                 className="w-full"
                 name="password"
+                size="small"
                 value={formFields.password}
                 disabled={isLoading === true ? true : false}
                 onChange={onChangeInput}

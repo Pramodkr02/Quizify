@@ -28,6 +28,14 @@ const Navigation = () => {
     );
   };
 
+  // Close mobile menu when navigating
+  const closeMobileMenu = () => {
+    const mobileMenu = document.getElementById("mobile-menu");
+    if (mobileMenu && !mobileMenu.classList.contains("hidden")) {
+      mobileMenu.classList.add("hidden");
+    }
+  };
+
   const navItems = [
     { path: "/", label: "Home", icon: <FaHome /> },
     { path: "/dashboard", label: "Dashboard", icon: <FaChartBar /> },
@@ -45,7 +53,7 @@ const Navigation = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
-              <span className="font-bold w-[250px] h-[62px]">
+              <span className="font-bold w-[200px] h-[62px]">
                 <img
                   className="w-full h-full object-contain"
                   src={Logo}
@@ -55,7 +63,7 @@ const Navigation = () => {
             </Link>
           </div>
 
-          <div className="hidden md:flex items-center space-x-1">
+          <div className="hidden md:flex items-center space-x-2 lg:space-x-3">
             {context.isLogin === true ? (
               <>
                 {navItems.map((item) => (
@@ -94,7 +102,7 @@ const Navigation = () => {
                   className="flex items-center"
                 >
                   <span className="mr-1">
-                    <SiSimplelogin />
+                    <SiSimplelogin className="text-[1.1rem]" />
                   </span>
                   <span className="">Login</span>
                 </Button>
@@ -134,26 +142,32 @@ const Navigation = () => {
 
         {/* Mobile menu */}
         <div id="mobile-menu" className="md:hidden hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          <div className="px-3 pt-3 pb-4 space-y-1 sm:px-4">
             {context.isLogin === true ? (
               <>
                 {navItems.map((item) => (
                   <Link
                     key={item.path}
                     to={item.path}
-                    className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
+                    onClick={closeMobileMenu}
+                    className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200  ${
                       isActive(item.path)
                         ? "bg-blue-100 text-blue-700"
                         : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                     }`}
                   >
-                    <span className="mr-2">{item.icon}</span>
-                    {item.label}
+                    <div className="flex items-center ">
+                      <span className="mr-2">{item.icon}</span>
+                      {item.label}
+                    </div>
                   </Link>
                 ))}
                 <button
-                  onClick={logout}
-                  className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-900 hover:bg-red-50 transition-colors duration-200"
+                  onClick={() => {
+                    closeMobileMenu();
+                    logout();
+                  }}
+                  className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-900 hover:bg-red-50 transition-colors duration-200 flex items-center "
                 >
                   <span className="mr-2">
                     <IoMdLogOut />
@@ -164,12 +178,15 @@ const Navigation = () => {
             ) : (
               <Link
                 to="/login"
-                className="block px-3 py-2 rounded-md text-base font-medium text-blue-600 hover:text-blue-900 hover:bg-blue-50 transition-colors duration-200"
+                onClick={closeMobileMenu}
+                className="px-3 py-2 rounded-md text-base font-medium text-blue-600 hover:text-blue-900 hover:bg-blue-50 transition-colors duration-200 flex items-center "
               >
-                <span className="mr-2">
-                  <SiSimplelogin />
-                </span>
-                Login
+                <Button variant="contained" color="primary" size="small">
+                  <span className="mr-2">
+                    <SiSimplelogin className="text-[1.1rem]" />
+                  </span>
+                  Login
+                </Button>
               </Link>
             )}
           </div>

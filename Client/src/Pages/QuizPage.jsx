@@ -244,12 +244,13 @@ const QuizPage = ({ quizData, onQuizSubmit }) => {
             </div>
 
             {/* Navigation Controls */}
+
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex items-center justify-between">
                 <button
                   onClick={handlePrevious}
                   disabled={currentQuestionIndex === 0}
-                  className="flex items-center space-x-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                  className="flex items-center space-x-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer"
                 >
                   <svg
                     className="w-4 h-4"
@@ -270,7 +271,7 @@ const QuizPage = ({ quizData, onQuizSubmit }) => {
                 <div className="flex items-center space-x-4">
                   <button
                     onClick={handleMarkForReview}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
                       markedForReview.has(currentQuestionIndex)
                         ? "bg-blue-500 text-white"
                         : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -278,13 +279,13 @@ const QuizPage = ({ quizData, onQuizSubmit }) => {
                   >
                     {markedForReview.has(currentQuestionIndex)
                       ? "✓ Marked for Review"
-                      : "Mark for Review"}
+                      : "Mark for Review "}
                   </button>
 
                   <button
                     onClick={handleNext}
                     disabled={currentQuestionIndex === totalQuestions - 1}
-                    className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                    className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer"
                   >
                     <span>Next</span>
                     <svg
@@ -306,7 +307,7 @@ const QuizPage = ({ quizData, onQuizSubmit }) => {
                 <button
                   onClick={handleSubmitQuiz}
                   disabled={isSubmitting}
-                  className="px-6 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                  className="px-6 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer"
                 >
                   {isSubmitting ? "Submitting..." : "Submit Quiz"}
                 </button>

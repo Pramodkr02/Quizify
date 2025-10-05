@@ -81,6 +81,7 @@ const Register = () => {
               <TextField
                 type="name"
                 id="name"
+                size="small"
                 name="name"
                 value={formFields.name}
                 disabled={isLoading === true ? true : false}
@@ -95,6 +96,7 @@ const Register = () => {
                 type="email"
                 id="email"
                 name="email"
+                size="small"
                 value={formFields.email}
                 disabled={isLoading === true ? true : false}
                 label="Email Id *"
@@ -109,6 +111,7 @@ const Register = () => {
                 type={isShowPassword === false ? "password" : "text"}
                 id="password"
                 name="password"
+                size="small"
                 value={formFields.password}
                 disabled={isLoading === true ? true : false}
                 label="Password *"

@@ -7,6 +7,19 @@ body {
   font-family: "Inter", sans-serif;
   overflow-x: hidden;
 }
+
+/* Small-screen proportional scaling wrapper for <365px */
+.scale-wrapper {
+  width: 100%;
+  transform-origin: top center;
+}
+
+@media (max-width: 364px) {
+  .scale-wrapper {
+    /* scale down proportionally but keep layout intact */
+    transform: scale(calc(100vw / 365));
+  }
+}
 h1,
 h2,
 h3,

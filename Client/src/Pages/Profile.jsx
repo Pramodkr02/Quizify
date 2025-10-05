@@ -150,22 +150,29 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
+        <div className="mb-6 sm:mb-8">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
             <div>
-              <Typography variant="h4" className="font-bold text-gray-800 mb-2">
+              <Typography
+                variant="h4"
+                className="font-bold text-gray-800 mb-1 text-2xl sm:text-3xl lg:text-4xl"
+              >
                 User Profile
               </Typography>
-              <Typography variant="body1" className="text-gray-600">
+              <Typography
+                variant="body1"
+                className="text-gray-600 text-sm sm:text-base"
+              >
                 Manage your account and view your progress
               </Typography>
             </div>
-            <div className="flex gap-2">
+            <div className="flex w-full md:w-auto justify-center md:justify-end gap-2">
               <Button
                 variant="outlined"
                 startIcon={<FaEdit />}
+                className="focus-visible:ring-2 focus-visible:ring-blue-500"
                 onClick={() =>
                   alert("Edit profile functionality would be implemented here")
                 }
@@ -175,6 +182,7 @@ const Profile = () => {
               <Button
                 variant="outlined"
                 startIcon={<FaCog />}
+                className="focus-visible:ring-2 focus-visible:ring-blue-500"
                 onClick={() =>
                   alert("Settings functionality would be implemented here")
                 }
@@ -190,19 +198,19 @@ const Profile = () => {
           <Grid item xs={12} lg={4}>
             <Card className="mb-6">
               <CardContent className="text-center">
-                <Avatar
-                  sx={{ width: 100, height: 100, mx: "auto", mb: 2 }}
-                  className="bg-gradient-to-r from-blue-500 to-purple-600"
-                >
+                <Avatar className="bg-gradient-to-r from-blue-500 to-purple-600 w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 mx-auto mb-2">
                   <FaUser className="text-4xl" />
                 </Avatar>
                 <Typography
                   variant="h5"
-                  className="font-bold text-gray-800 mb-1"
+                  className="font-bold text-gray-800 mb-1 text-lg sm:text-xl lg:text-2xl"
                 >
                   {userProfile.name}
                 </Typography>
-                <Typography variant="body2" className="text-gray-600 mb-2">
+                <Typography
+                  variant="body2"
+                  className="text-gray-600 mb-2 break-all"
+                >
                   {userProfile.email}
                 </Typography>
                 <Typography variant="body2" className="text-gray-500">
@@ -221,31 +229,31 @@ const Profile = () => {
                   Quick Stats
                 </Typography>
 
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Total Quizzes:</span>
-                    <span className="font-semibold">
+                    <span className="font-semibold text-sm sm:text-base lg:text-lg">
                       {userProfile.totalQuizzes}
                     </span>
                   </div>
 
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Average Score:</span>
-                    <span className="font-semibold text-blue-600">
+                    <span className="font-semibold text-blue-600 text-sm sm:text-base lg:text-lg">
                       {userProfile.averageScore}%
                     </span>
                   </div>
 
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Best Score:</span>
-                    <span className="font-semibold text-green-600">
+                    <span className="font-semibold text-green-600 text-sm sm:text-base lg:text-lg">
                       {userProfile.bestScore}%
                     </span>
                   </div>
 
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Total Time:</span>
-                    <span className="font-semibold">
+                    <span className="font-semibold text-sm sm:text-base lg:text-lg">
                       {formatTime(userProfile.totalTimeSpent)}
                     </span>
                   </div>
@@ -254,59 +262,74 @@ const Profile = () => {
             </Card>
           </Grid>
 
-          {/* Performance History */}
           <Grid item xs={12} lg={8}>
+            {/* Detailed Statistics */}
             <Card className="mb-6">
               <CardContent>
                 <Typography
                   variant="h6"
                   className="font-bold text-gray-800 mb-4"
                 >
-                  Performance History
+                  Detailed Statistics
                 </Typography>
 
-                <div className="space-y-3">
-                  {userProfile.recentScores.map((score, index) => (
-                    <div key={index} className="bg-gray-50 rounded-lg p-4">
-                      <div className="flex justify-between items-center mb-2">
-                        <Typography variant="body2" className="text-gray-600">
-                          {formatDate(score.date)}
-                        </Typography>
-                        <Chip
-                          label={`${score.percentage}%`}
-                          color={
-                            score.percentage >= 80
-                              ? "success"
-                              : score.percentage >= 60
-                              ? "warning"
-                              : "error"
-                          }
-                          size="small"
-                        />
-                      </div>
-                      <div className="flex justify-between text-sm mb-2">
-                        <span>
-                          Score: {score.score}/{score.total}
-                        </span>
-                        <span className="text-gray-500">
-                          Time: {formatTime(score.timeSpent)}
-                        </span>
-                      </div>
-                      <LinearProgress
-                        variant="determinate"
-                        value={score.percentage}
-                        className="mt-2"
-                        color={
-                          score.percentage >= 80
-                            ? "success"
-                            : score.percentage >= 60
-                            ? "warning"
-                            : "error"
-                        }
-                      />
+                <Grid container spacing={3}>
+                  <Grid item xs={12} sm={6} md={3}>
+                    <div className="text-center p-4 bg-blue-50 rounded-lg">
+                      <Typography
+                        variant="h4"
+                        className="font-bold text-blue-600 text-xl sm:text-2xl lg:text-3xl"
+                      >
+                        {userProfile.stats.totalQuestions}
+                      </Typography>
+                      <Typography variant="body2" className="text-gray-600">
+                        Total Questions
+                      </Typography>
                     </div>
-                  ))}
-                </div>
+                  </Grid>
+
+                  <Grid item xs={12} sm={6} md={3}>
+                    <div className="text-center p-4 bg-green-50 rounded-lg">
+                      <Typography
+                        variant="h4"
+                        className="font-bold text-green-600 text-xl sm:text-2xl lg:text-3xl"
+                      >
+                        {userProfile.stats.correctAnswers}
+                      </Typography>
+                      <Typography variant="body2" className="text-gray-600">
+                        Correct Answers
+                      </Typography>
+                    </div>
+                  </Grid>
+
+                  <Grid item xs={12} sm={6} md={3}>
+                    <div className="text-center p-4 bg-purple-50 rounded-lg">
+                      <Typography
+                        variant="h4"
+                        className="font-bold text-purple-600 text-xl sm:text-2xl lg:text-3xl"
+                      >
+                        {userProfile.stats.accuracy}%
+                      </Typography>
+                      <Typography variant="body2" className="text-gray-600">
+                        Accuracy
+                      </Typography>
+                    </div>
+                  </Grid>
+
+                  <Grid item xs={12} sm={6} md={3}>
+                    <div className="text-center p-4 bg-orange-50 rounded-lg">
+                      <Typography
+                        variant="h4"
+                        className="font-bold text-orange-600 text-xl sm:text-2xl lg:text-3xl"
+                      >
+                        {userProfile.stats.streak}
+                      </Typography>
+                      <Typography variant="body2" className="text-gray-600">
+                        Current Streak
+                      </Typography>
+                    </div>
+                  </Grid>
+                </Grid>
               </CardContent>
             </Card>
 
@@ -374,73 +397,61 @@ const Profile = () => {
               </CardContent>
             </Card>
 
-            {/* Detailed Statistics */}
-            <Card>
+            {/* Performance History */}
+            <Card className="mb-6">
               <CardContent>
                 <Typography
                   variant="h6"
                   className="font-bold text-gray-800 mb-4"
                 >
-                  Detailed Statistics
+                  Performance History
                 </Typography>
 
-                <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <div className="text-center p-4 bg-blue-50 rounded-lg">
-                      <Typography
-                        variant="h4"
-                        className="font-bold text-blue-600"
-                      >
-                        {userProfile.stats.totalQuestions}
-                      </Typography>
-                      <Typography variant="body2" className="text-gray-600">
-                        Total Questions
-                      </Typography>
+                <div className="flex md:block overflow-x-auto gap-3 md:space-y-3 pr-1">
+                  {userProfile.recentScores.map((score, index) => (
+                    <div
+                      key={index}
+                      className="bg-gray-50 rounded-lg p-4 flex-shrink-0 min-w-[260px] md:min-w-0"
+                    >
+                      <div className="flex justify-between items-center mb-2">
+                        <Typography variant="body2" className="text-gray-600">
+                          {formatDate(score.date)}
+                        </Typography>
+                        <Chip
+                          label={`${score.percentage}%`}
+                          color={
+                            score.percentage >= 80
+                              ? "success"
+                              : score.percentage >= 60
+                              ? "warning"
+                              : "error"
+                          }
+                          size="small"
+                        />
+                      </div>
+                      <div className="flex justify-between text-sm mb-2">
+                        <span>
+                          Score: {score.score}/{score.total}
+                        </span>
+                        <span className="text-gray-500">
+                          Time: {formatTime(score.timeSpent)}
+                        </span>
+                      </div>
+                      <LinearProgress
+                        variant="determinate"
+                        value={score.percentage}
+                        className="mt-2"
+                        color={
+                          score.percentage >= 80
+                            ? "success"
+                            : score.percentage >= 60
+                            ? "warning"
+                            : "error"
+                        }
+                      />
                     </div>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} md={3}>
-                    <div className="text-center p-4 bg-green-50 rounded-lg">
-                      <Typography
-                        variant="h4"
-                        className="font-bold text-green-600"
-                      >
-                        {userProfile.stats.correctAnswers}
-                      </Typography>
-                      <Typography variant="body2" className="text-gray-600">
-                        Correct Answers
-                      </Typography>
-                    </div>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} md={3}>
-                    <div className="text-center p-4 bg-purple-50 rounded-lg">
-                      <Typography
-                        variant="h4"
-                        className="font-bold text-purple-600"
-                      >
-                        {userProfile.stats.accuracy}%
-                      </Typography>
-                      <Typography variant="body2" className="text-gray-600">
-                        Accuracy
-                      </Typography>
-                    </div>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} md={3}>
-                    <div className="text-center p-4 bg-orange-50 rounded-lg">
-                      <Typography
-                        variant="h4"
-                        className="font-bold text-orange-600"
-                      >
-                        {userProfile.stats.streak}
-                      </Typography>
-                      <Typography variant="body2" className="text-gray-600">
-                        Current Streak
-                      </Typography>
-                    </div>
-                  </Grid>
-                </Grid>
+                  ))}
+                </div>
               </CardContent>
             </Card>
           </Grid>
