@@ -15,6 +15,7 @@ await connectDB();
 app.use(
   cors({
     origin: process.env.CLIENT_URL, // set to frontend URL in Vercel
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   })
 );
