@@ -9,11 +9,17 @@ dotenv.config();
 const app = express();
 connectDB();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("API is running...");
+  res.send(`Server running successfully on ${process.env.CLIENT_URL}`);
 });
 
 app.use("/api/quiz", quizRoutes);
