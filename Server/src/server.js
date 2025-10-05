@@ -12,9 +12,20 @@ const app = express();
 await connectDB();
 
 // Middleware
+// Strict CORS allowlist without trailing slashes
+const allowedOrigins = [
+  (process.env.CLIENT_URL || "").replace(/\/$/, ""),
+  "http://localhost:5173",
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL, // set to frontend URL in Vercel
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); // non-browser or same-origin
+      const normalized = origin.replace(/\/$/, "");
+      if (allowedOrigins.includes(normalized)) return callback(null, true);
+      return callback(new Error("Not allowed by CORS"));
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   })
@@ -25,6 +36,7 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Server running successfully");
 });
+
 app.use("/api/quiz", quizRoutes);
 app.use("/api/user", userRoutes);
 
