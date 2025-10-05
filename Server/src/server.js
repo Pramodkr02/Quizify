@@ -7,23 +7,24 @@ import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 const app = express();
-connectDB();
 
+// Connect MongoDB only once in serverless
+await connectDB();
+
+// Middleware
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: process.env.CLIENT_URL, // set to frontend URL in Vercel
     credentials: true,
   })
 );
-
 app.use(express.json());
 
+// Routes
 app.get("/", (req, res) => {
-  res.send(`Server running successfully on ${process.env.CLIENT_URL}`);
+  res.send("Server running successfully");
 });
-
 app.use("/api/quiz", quizRoutes);
 app.use("/api/user", userRoutes);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+export default app; // Export app for Vercel
