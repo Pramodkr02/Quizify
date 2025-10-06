@@ -101,27 +101,30 @@ const CongratulationsModal = ({
         </Box>
       </DialogContent>
 
-      <DialogActions className="justify-center pb-6">
-        <Button
-          onClick={onClose}
-          variant="outlined"
-          color="secondary"
-          size="large"
-          className="mr-4 px-6 py-2 border-2 border-gray-300 text-gray-600 hover:bg-gray-50 font-semibold rounded-lg transition-all duration-200"
-          startIcon={<FaHome />}
-        >
-          Go Home
-        </Button>
-        <Button
-          onClick={onViewDashboard}
-          variant="contained"
-          color="primary"
-          size="large"
-          className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
-          startIcon={<FaChartBar />}
-        >
-          View Dashboard
-        </Button>
+      <DialogActions className="pb-6 w-full !m-0">
+        <div className="w-full flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
+          <Button
+            onClick={onClose}
+            variant="outlined"
+            color="secondary"
+            size="large"
+            className="w-full sm:w-auto px-6 py-2 border-2 border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold rounded-lg transition-all duration-200"
+            startIcon={<FaHome />}
+          >
+            Go Home
+          </Button>
+          <Button
+            onClick={onViewDashboard}
+            variant="contained"
+            color="primary"
+            size="large"
+            className="w-full sm:w-auto px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+            startIcon={<FaChartBar />}
+            autoFocus
+          >
+            View Dashboard
+          </Button>
+        </div>
       </DialogActions>
     </Dialog>
   );

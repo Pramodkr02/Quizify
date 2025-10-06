@@ -38,21 +38,25 @@ const QuestionCard = ({
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-6">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2">
-            <span className="text-lg">{getCategoryIcon(category)}</span>
-            <span className="text-sm text-gray-600">Category: {category}</span>
+      <div className="flex items-center justify-between gap-2 mb-4 flex-nowrap">
+        <div className="flex items-center gap-3 min-w-0 overflow-hidden">
+          <div className="flex items-center gap-2 min-w-0 overflow-hidden">
+            <span className="text-base sm:text-lg shrink-0">
+              {getCategoryIcon(category)}
+            </span>
+            <span className="text-[12px] sm:text-sm text-gray-600 truncate max-w-[10rem] sm:max-w-[16rem]">
+              Category: {category}
+            </span>
           </div>
           <span
-            className={`px-3 py-1 rounded-full text-xs font-medium ${getDifficultyColor(
+            className={`shrink-0 px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-medium ${getDifficultyColor(
               difficulty
             )}`}
           >
             Difficulty: {difficulty}
           </span>
         </div>
-        <div className="text-sm text-gray-500">
+        <div className="shrink-0 text-[12px] sm:text-sm text-gray-500 whitespace-nowrap">
           {type === "boolean" ? "True/False" : "Multiple Choice"}
         </div>
       </div>

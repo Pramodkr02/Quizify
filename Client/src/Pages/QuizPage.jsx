@@ -210,15 +210,16 @@ const QuizPage = ({ quizData, onQuizSubmit }) => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          <h1 className="text-[clamp(1.5rem,5vw,3rem)] font-bold text-gray-800 text-center mb-2">
             Quiz Challenge
           </h1>
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-600">
+          <div className="flex items-center justify-between flex-wrap gap-1">
+            <div className="text-[clamp(0.7rem,2vw,0.9rem)] bg-blue-700 text-white rounded-2xl px-3 py-1">
               Progress: {attemptedQuestions}/{totalQuestions} Questions
               attempted
             </div>
-            <div className="text-sm text-gray-500">
+
+            <div className="text-[clamp(0.7rem,2vw,0.9rem)]  text-gray-600 font-medium whitespace-nowrap">
               Quiz ID: {quizId || "Loading..."}
             </div>
           </div>
@@ -246,11 +247,11 @@ const QuizPage = ({ quizData, onQuizSubmit }) => {
             {/* Navigation Controls */}
 
             <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <button
                   onClick={handlePrevious}
                   disabled={currentQuestionIndex === 0}
-                  className="flex items-center space-x-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer"
+                  className="flex items-center justify-center space-x-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer w-full sm:w-auto"
                 >
                   <svg
                     className="w-4 h-4"
@@ -268,10 +269,10 @@ const QuizPage = ({ quizData, onQuizSubmit }) => {
                   <span>Previous</span>
                 </button>
 
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center flex-wrap gap-3 sm:gap-4 w-full sm:w-auto justify-between sm:justify-center">
                   <button
                     onClick={handleMarkForReview}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer w-full sm:w-auto text-center ${
                       markedForReview.has(currentQuestionIndex)
                         ? "bg-blue-500 text-white"
                         : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -285,7 +286,7 @@ const QuizPage = ({ quizData, onQuizSubmit }) => {
                   <button
                     onClick={handleNext}
                     disabled={currentQuestionIndex === totalQuestions - 1}
-                    className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer"
+                    className="flex items-center justify-center space-x-2 px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer w-full sm:w-auto"
                   >
                     <span>Next</span>
                     <svg
@@ -307,7 +308,7 @@ const QuizPage = ({ quizData, onQuizSubmit }) => {
                 <button
                   onClick={handleSubmitQuiz}
                   disabled={isSubmitting}
-                  className="px-6 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer"
+                  className="px-6 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer w-full sm:w-auto"
                 >
                   {isSubmitting ? "Submitting..." : "Submit Quiz"}
                 </button>
